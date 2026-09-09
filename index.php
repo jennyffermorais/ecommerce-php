@@ -10,7 +10,13 @@ $app = AppFactory::create();
 
 $app->get('/', function (Request $request, Response $response) {
 
-	$response->getBody()->write("OK");
+	//$response->getBody()->write("OK");
+
+	$sql = new Hcode\DB\Sql();
+
+	$results = $sql-> select("SELECT * FROM tb_users");
+
+	echo json_encode($results);
 
 	return $response;
 });
