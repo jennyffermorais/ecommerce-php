@@ -1,0 +1,8 @@
+# Dependências
+vendor
+
+# Executável local do Composer
+composer.phar
+
+hosts
+httpd-vhosts.conf
