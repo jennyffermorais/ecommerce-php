@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once("vendor/autoload.php");
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -8,6 +8,7 @@ use Slim\Factory\AppFactory;
 
 use \Hcode\Page;
 use \Hcode\PageAdmin;
+use \Hcode\Model\User;
 
 $app = AppFactory::create();
 
@@ -20,9 +21,35 @@ $app->get('/', function (Request $request, Response $response) {
 
 $app->get('/admin', function (Request $request, Response $response) {
 
+    User::verifyLogin();
+
     $page = new PageAdmin();
     $page->setTpl("index");
     return $response;
+});
+
+$app->get('/admin/login', function (Request $request, Response $response) {
+
+    $page = new PageAdmin([
+        "header" => false,
+        "footer" => false
+    ]);
+    $page->setTpl("login");
+    return $response;
+});
+
+$app->post('/admin/login', function (Request $request, Response $response) {
+
+    User::login($_POST["login"], $_POST["password"]);
+    header("Location: /admin");
+    exit;
+});
+
+$app->get('/admin/logout', function (Request $request, Response $response) {
+
+    User::logout();
+    header("Location: /admin/login");
+    exit;
 });
 
 $app->run();
